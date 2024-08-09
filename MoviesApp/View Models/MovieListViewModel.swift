@@ -9,7 +9,7 @@
 import Foundation
 import SwiftUI
 
-class MovieListViewModel: ObservableObject {
+class MovieListViewModel: ViewModelBase {
    
     @Published var movies = [MovieViewModel]()
     let httpClient = HTTPClient()
@@ -41,12 +41,16 @@ class MovieListViewModel: ObservableObject {
                             else {
                                 return nil
                             }
+                            self.loadingState = .success
                             return  MovieViewModel(movie: movie)
                         }
                     }
                 }
             case .failure(let error):
                 print(error.localizedDescription)
+                DispatchQueue.main.async {
+                    self.loadingState = .failed
+                }
             }
         }
     }
@@ -66,12 +70,16 @@ class MovieListViewModel: ObservableObject {
                             else {
                                 return nil
                             }
+                            self.loadingState = .success
                             return MovieViewModel(movie: movie)
                         }
                     }
                 }
             case .failure(let error):
                 print(error.localizedDescription)
+                DispatchQueue.main.async {
+                    self.loadingState = .failed
+                }
             }
         }
     }

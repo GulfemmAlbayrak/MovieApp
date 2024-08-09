@@ -26,11 +26,12 @@ struct MovieListScreen: View {
                         self.movieListVM.fetchMovies(for: category)
                     }) {
                         Text(category.rawValue)
-                            .padding()
-                            .background(self.selectedCategory == category ? Color.blue : Color.clear)
+                            .font(.headline)
+                            .padding(.horizontal, 5)
+                            .padding(.vertical, 3)
+                            .background(self.selectedCategory == category ? Color.purple : Color.clear)
                             .foregroundColor(self.selectedCategory == category ? .white : .black)
-                            .cornerRadius(5)
-                                        
+                            .cornerRadius(10)
                     }
                     
                     
@@ -45,9 +46,14 @@ struct MovieListScreen: View {
             .padding(10)
             .textFieldStyle(RoundedBorderTextFieldStyle())
             
-
-            MovieListView(movies: self.movieListVM.movies)
             .navigationBarTitle("Movies")
+            
+            
+            if self.movieListVM.loadingState == .success {
+                MovieListView(movies: self.movieListVM.movies)
+            } else if self.movieListVM.loadingState == .failed {
+                FailedView()
+            }
         }
             .embedNavigationView()
             .onAppear {
