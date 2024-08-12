@@ -29,8 +29,8 @@ struct MovieListScreen: View {
                             .font(.headline)
                             .padding(.horizontal, 5)
                             .padding(.vertical, 3)
-                            .background(self.selectedCategory == category ? Color.purple : Color.clear)
-                            .foregroundColor(self.selectedCategory == category ? .white : .black)
+                            .background(self.selectedCategory == category ? Color.red : Color.clear)
+                            .foregroundColor(self.selectedCategory == category ? .white : .gray)
                             .cornerRadius(10)
                     }
                     
@@ -53,9 +53,13 @@ struct MovieListScreen: View {
                 MovieListView(movies: self.movieListVM.movies)
             } else if self.movieListVM.loadingState == .failed {
                 FailedView()
+            } else if self.movieListVM.loadingState == .loading {
+                LoadingView()
             }
-        }
+            
+            }
             .embedNavigationView()
+            
             .onAppear {
                 self.movieListVM.fetchMovies(for: self.selectedCategory)
             }

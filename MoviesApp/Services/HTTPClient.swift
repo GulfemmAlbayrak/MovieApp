@@ -59,4 +59,29 @@ class HTTPClient {
             }
         }.resume()
     }
-}
+    
+    func getMovieDetailsBy(id: Int, completion: @escaping (Result<MovieDetail, NetworkError>) -> Void) {
+        guard let url = URL.forMoviesById(id) else {
+            return completion(.failure(.badURL))
+        }
+        
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            
+            guard let data = data, error == nil else {
+                return completion(.failure(.noData))
+            }
+            
+            // Print the raw JSON response
+            if let json = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) {
+                print("JSON Response: \(json)")
+            } else {
+                print("Failed to serialize JSON")
+            }
+            
+            guard let movieDetail = try? JSONDecoder().decode(MovieDetail.self, from: data) else {
+                return completion(.failure(.decodingError))
+            }
+            
+            completion(.success(movieDetail))
+        }.resume()
+    }}

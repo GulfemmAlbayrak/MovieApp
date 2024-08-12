@@ -16,4 +16,8 @@ extension URL {
     static func forMoviesByName(_ name: String) -> URL? {
         return URL(string: "https://api.themoviedb.org/3/search/movie?query=\(name)&api_key=\(Constants.apiKey)")
     }
+    
+    static func forMoviesById(_ id: Int) -> URL? {
+        return URL(string: "https://api.themoviedb.org/3/movie/\(id)?api_key=\(Constants.apiKey)")
+    }
 }

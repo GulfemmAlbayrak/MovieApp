@@ -56,12 +56,16 @@ class MovieListViewModel: ViewModelBase {
     }
     
     func searchByName(_ name: String) {
+        
+        self.loadingState = .loading
+        
         httpClient.getMoviesBy(search: name) { result in
             switch result {
             case .success(let movies):
                 if let movies {
                     DispatchQueue.main.async {
                         self.movies = movies.compactMap { movie in
+                            // self.loadingState = .success
                             guard
                                 let id = movie.id,
                                 let title = movie.title, !title.isEmpty,
@@ -70,9 +74,9 @@ class MovieListViewModel: ViewModelBase {
                             else {
                                 return nil
                             }
-                            self.loadingState = .success
                             return MovieViewModel(movie: movie)
                         }
+                        self.loadingState = .success
                     }
                 }
             case .failure(let error):
